@@ -27,5 +27,6 @@ The Inventory Management System is designed to support with inventory control fo
 
 
 ### Database Schema Design (ERD)
-[ERD Diagram](/home/ubuntu/project/ERD-Image.png)
+![ERD Diagram](ERD-Image.png)
+
 
