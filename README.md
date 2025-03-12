@@ -83,5 +83,5 @@ POST /auth/login
 ```
 Get profile of logged-in user
 ```bash
-POST /auth/profile
+GET /auth/profile
 ```
