@@ -89,9 +89,40 @@ def delete_category(db: Session, category_id: int) -> Category | None:
         db.commit()
     return db_category
 
-    
+
+# Supplier CRUD
+
+def create_supplier(db: Session, supplier: SupplierCreate) -> Supplier:
+    db_supplier = Supplier(**supplier.model_dump())
+    db.add(db_supplier)
+    db.commit()
+    db.refresh(db_supplier)
+    return db_supplier
+
+def get_supplier(db: Session, supplier_id: int) -> Supplier | None:
+    return db.query(Supplier).filter(Supplier.supplier_id == supplier_id).first()
+
+def get_suppliers(db: Session, skip: int = 0, limit: int = 10, search: str | None = None) -> list[Supplier]:
+    query = db.query(Supplier)
+    if search:
+        query = query.filter(Supplier.name.ilike(f"{search}"))
+    return query.offset(skip).limit(limit).all()
 
 
+def update_supplier(db: Session, db_supplier: Supplier, updates: SupplierUpdate) -> Supplier:
+    update_data = updates.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_supplier,key, value)
+    db.commit()
+    db.refresh(db_supplier)
+    return db_supplier
+
+def delete_supplier(db: Session, supplier_id: int) -> Supplier | None:
+    db_supplier = get_supplier(db, supplier_id)
+    if db_supplier:
+        db.delete(db_supplier)
+        db.commit()
+    return db_supplier
 
    
 
