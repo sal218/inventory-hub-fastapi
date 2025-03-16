@@ -32,10 +32,13 @@ def update_item(item_id: int, updates: schemas.InventoryItemUpdate, db: Session 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Item not found")
     return crud.update_item(db, db_item, updates)
 
-
+# delete an item
 @router.delete("/{item_id}", response_model=schemas.InventoryItem)
 def delete_item(item_id: int, db: Session = Depends(get_db)):
     db_item = crud.get_item(db, item_id)
     if not db_item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
-    return db_item
+    deleted_item = crud.delete_item(db,item_id)
+    if not deleted_item:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unable to delete item")
+    return deleted_item
