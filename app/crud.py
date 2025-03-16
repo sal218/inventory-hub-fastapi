@@ -57,6 +57,39 @@ def delete_item(db: Session, item_id: int) -> InventoryItem | None:
 
 # Category CRUD
 
+def create_category(db: Session, category: CategoryCreate) -> Category:
+
+    db_category = Category(**category.model_dump())
+    db.add(db_category)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+def get_category(db: Session, category_id: int) -> Category | None:
+    return db.query(Category).filter(Category.category_id == category_id).first()
+
+def get_categories(db: Session, skip: int = 0, limit: int = 10, search: str | None = None) -> list[Category]:
+    query = db.query(Category)
+    if search:
+        query = query.filter(Category.name.ilike(f"{search}")) # enable category search
+    return query.offset(skip).limit(limit).all()
+
+def update_category(db: Session, db_category: Category, updates: CategoryUpdate) -> Category: 
+    update_data = updates.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_category, key, value)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+def delete_category(db: Session, category_id: int) -> Category | None:
+    db_category = get_item(db, category_id)
+    if category_id:
+        db.delete(category_id)
+        db.commit()
+    return db_category
+
+    
 
 
 
