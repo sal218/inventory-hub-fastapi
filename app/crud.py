@@ -124,8 +124,47 @@ def delete_supplier(db: Session, supplier_id: int) -> Supplier | None:
         db.commit()
     return db_supplier
 
-   
 
+# User CRUD
 
+def create_user(db: Session, user: UserCreate) -> User:
+    hashed_password = pwd_context.hash(user.password)
+    user_data = user.model_dump()
+    user_data["password"] = hashed_password
+    db_user = User(**user_data)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user   
+
+def get_user(db: Session, user_id: int) -> User | None:
+    return db.query(User).filter(User.user_id == user_id).first()
+
+def update_user(db: Session, db_user: User, updates: UserUpdate) -> User:
+    update_data = updates.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_user, key, value)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+def update_user_password(db: Session, db_user: User, updates: UserPasswordUpdate) -> User:
+    # we first need to check that the old password matches correctly
+    if not pwd_context.verify(updates.old_password, db_user.password):
+        raise ValueError("Incorrect old password")
+    
+    # we hash the new password and update it
+    new_hashed = pwd_context.hash(updates.new_password)
+    db_user.password = new_hashed
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+def delete_user(db: Session, user_id: int) -> User | None:
+    db_user = get_user(db, user_id)
+    if db_user:
+        db.delete(db_user)
+        db.commit()
+    return db_user
 
 
