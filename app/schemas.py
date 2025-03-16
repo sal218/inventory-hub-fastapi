@@ -1,4 +1,4 @@
-from pydantic import BaseModel, condecimal
+from pydantic import BaseModel, condecimal, Field
 from datetime import datetime
 from decimal import Decimal
 from typing import List, Annotated
@@ -12,6 +12,10 @@ class CategoryBase(BaseModel):
 # # keeping this separate will allow for future modifications should I decide to add more. For now it extends from CategoryBase
 class CategoryCreate(CategoryBase):
     pass
+
+class CategoryUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
 
 class Category(CategoryBase):
     category_id: int
@@ -50,7 +54,7 @@ class InventoryItem(InventoryItemBase):
     updated_at: datetime
     category: Category
 
-    class config:
+    class Config:
         orm_mode = True
 
 
@@ -64,11 +68,15 @@ class SupplierBase(BaseModel):
 class SupplierCreate(SupplierBase):
     pass
 
+class SupplierUpdate(BaseModel):
+    name: str | None = None
+    contact_details: str | None = None
+
 class Supplier(SupplierBase):
     supplier_id: int
     created_at: datetime
 
-    class config:
+    class Config:
         orm_mode = True
 
 
@@ -81,12 +89,21 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+class UserUpdate(BaseModel):
+    username: str | None = None
+    role: str | None = None
+    
 class User(UserBase):
     user_id: int
     created_at: datetime
 
-    class config:
+    class Config:
         ord_mode = True
 
 
+class UserPasswordUpdate(BaseModel):
+    old_password: str = Field(..., min_length=8, description="Current password")
+    new_password: str = Field(..., min_length=8, description="New password to be set")
 
+    class Config:
+        orm_mode = True
