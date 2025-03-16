@@ -8,7 +8,7 @@ router = APIRouter()
 
 # get all items
 @router.get("/", response_model=list[schemas.InventoryItem])
-def list_items(skip: int, limit: int = 10, search: str | None = None, category_id: int | None = None, db: Session = Depends(get_db)):
+def list_items(skip: int = 0, limit: int = 10, search: str | None = None, category_id: int | None = None, db: Session = Depends(get_db)):
     return crud.get_items(db, skip=skip, limit=limit, search=search, category_id=category_id )
 
 # get a single item
