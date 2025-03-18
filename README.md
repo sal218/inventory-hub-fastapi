@@ -29,59 +29,58 @@ The Inventory Management System is designed to support with inventory control fo
 ### Database Schema Design (ERD)
 ![ERD Diagram](ERD-Image.png)
 
-### API Endpoints Structure 
-### Inventory Items
-List all inventory items.
-```bash
-GET /items
-```
-Retrieve details for a single inventory item.
-```bash
-GET /items/{item_id}
-```
-Create a new inventory item.
-```bash
-POST /items
-```
-Update an existing inventory item.
-```bash
-POST /items/{item_id}
-```
-Remove an inventory item from the system.
-```bash
-DELETE /items/{item_id}
-```
+### Data Schema Design Decisions
+PENDING
+### API Endpoints Structure
+
+#### Inventory Items
+- List all inventory items:  
+  `GET /items`
+- Retrieve details for a single inventory item:  
+  `GET /items/{item_id}`
+- Create a new inventory item:  
+  `POST /items`
+- Update an existing inventory item:  
+  `POST /items/{item_id}`
+- Remove an inventory item from the system:  
+  `DELETE /items/{item_id}`
+
 ---
-### Suppliers
- List all suppliers.
- ```bash
-GET /suppliers
- ```
- Adding suppliers
- ```bash
-POST /suppliers
- ```
+
+#### Suppliers
+- List all suppliers:  
+  `GET /suppliers`
+- Retrieve details for a single supplier:  
+  `GET /suppliers/{supplier_id}`
+- Add a new supplier:  
+  `POST /suppliers`
+- Update an existing supplier:  
+  `POST /suppliers/{supplier_id}`
+- Delete a supplier:  
+  `DELETE /suppliers/{supplier_id}`
+
 ---
-### Categories
-List all categories
-```bash
-GET /categories
-```
-Create new categories
-```bash
-POST /categories
-```
+
+#### Categories
+- List all categories:  
+  `GET /categories`
+- Retrieve details for a single category:  
+  `GET /categories/{category_id}`
+- Create a new category:  
+  `POST /categories`
+- Update an existing category:  
+  `POST /categories/{category_id}`
+- Delete a category:  
+  `DELETE /categories/{category_id}`
+
 ---
-### User Authentication
-Register a new user
-```bash
-POST /auth/register
-```
-Log in an existing user
-```bash
-POST /auth/login
-```
-Get profile of logged-in user
-```bash
-GET /auth/profile
-```
+
+#### User Authentication & Authorization
+- Register a new user:  
+  `POST /auth/register`
+- Log in an existing user:  
+  `POST /auth/login`
+- Get profile of logged-in user:  
+  `GET /auth/profile`
+- (Admin-only) Access admin-protected endpoint:  
+  `GET /auth/admin`
