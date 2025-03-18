@@ -12,7 +12,7 @@ from app.database import get_db
 from app.models import User
 
 
-SECRET_KEY = "your_secret_key" # i need to replace this with an actual secret key
+SECRET_KEY = "e7131ead47aeae655f8e5a912d896695099be22c4bbe0b72b210ef52e3011c64" # used openssl rand -hex 32 to generate (will be better to store as envrionment var later)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -93,6 +93,8 @@ def read_profile(current_user: schemas.User = Depends(get_current_user)):
 @router.get("/admin", response_model=schemas.User)
 def admin_endpoint(current_user: User = Depends(require_admin)):
     return {"message" : f"Welcome, admin {current_user.username}"}
+
+
 
 
 
