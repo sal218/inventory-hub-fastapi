@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Inventory Management System{% endblock %}</title>
+        <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Inventory Management System</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/ui/login">Login</a>
+            <a href="/ui/register">Register/a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2025 Inventory Management System. All rights reserevd.</p>
+    </footer>
+</body>
+</html>
