@@ -7,7 +7,7 @@ import jwt
 
 from app.database import get_db
 from app import crud, schemas
-from app.models import User
+from app.models import User, Category
 from app.routes.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 
 
@@ -108,6 +108,138 @@ async def logout(_request: Request):
     return response
 
 
+@router.get("/inventory/manage", response_class=HTMLResponse)
+async def manage_inventory(request: Request, current_user: User = Depends(get_current_user_from_cookie), db: Session = Depends(get_db)):
+    items = crud.get_items(db, skip=0, limit=20)
+    categories = crud.get_categories(db)
+    categories_data = [{"category_id": cat.category_id, "name": cat.name} for cat in categories]
+    return templates.TemplateResponse("manage_inventory.html", {
+        "request": request, 
+        "current_user": current_user, 
+        "items": items,
+        "categories": categories_data
+    })
+
+
+@router.get("/inventory/view", response_class=HTMLResponse)
+async def view_inventory(
+    request: Request, 
+    search: str | None = None, 
+    category_id: int | None = None,
+    page: int = 1, 
+    current_user: User = Depends(get_current_user_from_cookie), 
+    db: Session = Depends(get_db)
+):
+    limit = 10
+    skip = (page - 1) * limit
+    items = crud.get_items(db, skip=skip, limit=limit, search=search, category_id=category_id)
+
+    prev_page = page - 1 if page > 1 else None
+    next_page = page + 1 if len(items) == limit else None
+
+    categories = crud.get_categories(db)
+
+    return templates.TemplateResponse("view_inventory.html", {
+        "request" : request,
+        "current_user" : current_user,
+        "items" : items,
+        "prev_page" : prev_page,
+        "next_page" : next_page,
+        "search" : search,
+        "selected_category" : category_id,
+        "categories" : categories   
+    })
+
+@router.post("/inventory/add", response_class=RedirectResponse)
+async def add_inventory_item(
+    request: Request,
+    name: str = Form(...),
+    description: str = Form(""),
+    quantity: int = Form(...),
+    price: float = Form(...),
+    category: str = Form(...),  
+    category_id: str = Form(""),  
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user_from_cookie)
+):
+    
+    if category_id:
+        cat_id = int(category_id)
+    else:
+        
+        existing_cat = db.query(Category).filter(Category.name == category).first()
+        if existing_cat:
+            cat_id = existing_cat.category_id
+        else:
+           
+            new_cat = crud.create_category(db, schemas.CategoryCreate(name=category, description=""))
+            cat_id = new_cat.category_id
+
+    item_data = schemas.InventoryItemCreate(
+        name=name,
+        description=description,
+        quantity=quantity,
+        price=price,
+        category_id=cat_id,
+        created_by=current_user.user_id
+    )
+    crud.create_item(db, item_data)
+    return RedirectResponse(url="/inventory/manage", status_code=status.HTTP_302_FOUND)
+
+
+@router.post("/inventory/edit/{item_id}", response_class=RedirectResponse)
+async def edit_inventory_item(
+    item_id: int,
+    request: Request,
+    name: str = Form(...),
+    description: str = Form(""),
+    quantity: int = Form(...),
+    price: float = Form(...),
+    category: str = Form(""),  
+    category_id: str = Form(...),  
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user_from_cookie)
+):
+    item = crud.get_item(db, item_id)
+    if not item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
+    
+    
+    if category.strip():  
+        
+        existing_cat = db.query(Category).filter(Category.name == category).first()
+        if existing_cat:
+            cat_id = existing_cat.category_id
+        else:
+            
+            new_cat = crud.create_category(db, schemas.CategoryCreate(name=category, description=""))
+            cat_id = new_cat.category_id
+    else:
+        
+        cat_id = int(category_id)
+    
+    updates = schemas.InventoryItemUpdate(
+        name=name,
+        description=description,
+        quantity=quantity,
+        price=price,
+        category_id=cat_id
+    )
+    crud.update_item(db, item, updates)
+    return RedirectResponse(url="/inventory/manage", status_code=status.HTTP_302_FOUND)
+
+
+@router.get("/inventory/delete/{item_id}", response_class=RedirectResponse)
+async def delete_inventory_item(
+    item_id: int, 
+    db: Session = Depends(get_db), 
+    current_user: User = Depends(get_current_user_from_cookie)
+):
+    item = crud.get_item(db, item_id)
+    if not item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
+    crud.delete_item(db, item_id)
+    return RedirectResponse(url="/inventory/manage", status_code=status.HTTP_302_FOUND)
 
 
 

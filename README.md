@@ -12,7 +12,7 @@ The Inventory Management System is designed to support with inventory control fo
 
 - User Interface
     - A modern web interface for managing items and viewing inventory
-    - A simple and intutive dashboard to display stock levels and alerts
+    - A simple and intuitive dashboard to display stock levels and alerts
 
 - Authentication & Authorization
     - User registration, login, and role-based access
