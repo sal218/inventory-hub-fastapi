@@ -62,6 +62,10 @@ async def register_user(
         return templates.TemplateResponse("register.html", {"request" : request, "error" : f"Registration failed: {str(e)}"})
     
     # redirect to login page once user reigsters their account
-    response = RedirectResponse(url="/ui/login", status_code=status.HTTP_302_FOUND)
+    response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     return response
+
+
+
+
 

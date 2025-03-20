@@ -31,7 +31,7 @@ class InventoryItem(Base):
     # each inventory item belongs to exactly one category
     category = relationship("Category", back_populates="items")
     # many inventory items can have many suppliers (many-to-many relationship)
-    suppliers = relationship("ItemSuppliers", back_populates="item")
+    suppliers = relationship("ItemSupplier", back_populates="item")
 
 
 class Supplier(Base):
@@ -43,7 +43,7 @@ class Supplier(Base):
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # many suppliers can supply many inventory items (a lit of items the supplier can supply)
-    items = relationship("ItemSuppliers", back_populates="supplier")
+    items = relationship("ItemSupplier", back_populates="supplier")
 
 
 class ItemSupplier(Base):
