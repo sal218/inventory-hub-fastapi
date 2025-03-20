@@ -1,10 +1,14 @@
+from datetime import timedelta
 from fastapi import APIRouter, Request, Form, Depends, HTTPException, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
+import jwt
+
 from app.database import get_db
 from app import crud, schemas
 from app.models import User
+from app.routes.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 
 
 router = APIRouter()
@@ -31,8 +35,16 @@ async def login_user(
     # if username or password not correct, load login.html page with error message
     if not user or not crud.pwd_context.verify(password, user.password):
         return templates.TemplateResponse("login.html", {"request" : request, "error" : "Invalid Credentials"})
-    # load the home page after sucessful login 
-    response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+    
+    # create a JWT token 
+    token = create_access_token(
+        data={'sub': user.username},
+        expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    )
+
+    # create a response and set token in a cookie
+    response = RedirectResponse(url="/profile", status_code=status.HTTP_302_FOUND)
+    response.set_cookie(key="access_token", value=token, httponly=True)
     return response
 
 
@@ -64,6 +76,40 @@ async def register_user(
     # redirect to login page once user reigsters their account
     response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     return response
+
+#cookie based dependancy. Retrieves token from the requests cookies (instead of expecting authorization header)
+def get_current_user_from_cookie(request: Request, db: Session = Depends(get_db)) -> User:
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if not username:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+    return user
+
+
+# route to user profile page
+@router.get("/profile", response_class=HTMLResponse)
+async def profile_page(request: Request, current_user: schemas.User = Depends(get_current_user_from_cookie)):
+    return templates.TemplateResponse("profile.html", {"request" : request, "current_user" : current_user})
+
+# logout route to redirect user to login page after they logout
+@router.get("/logout")
+async def logout(_request: Request):
+    response = RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    response.delete_cookie("access_token")
+    return response
+
+
+
+
 
 
 

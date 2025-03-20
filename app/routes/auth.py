@@ -49,7 +49,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     except InvalidTokenError:
         raise credentials_exception
     
-    user = db.query(User).filter(User.username == username)
+    user = db.query(User).filter(User.username == username).first()
     if user is None:
         raise credentials_exception
     return user
@@ -66,7 +66,7 @@ def require_admin(current_user: User = Depends(get_current_user)) -> User:
 # register a new user
 @router.post("/register", response_model=schemas.User, status_code=status.HTTP_201_CREATED)
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    existing_user = db.query(User).filter(User.username == user.username)
+    existing_user = db.query(User).filter(User.username == user.username).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already registered.")
     return crud.create_user(db, user)
