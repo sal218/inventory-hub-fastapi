@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Inventory Management System{% endblock %}</title>
-        <link rel="stylesheet" href="/static/css/styles.css">
-        <link rel="icon" href="/static/favicon.ico">
+    <meta charset="UTF-8">
+    <title>{% block title %}Inventory Management System{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/static/favicon.ico">
 </head>
-<body>
-    <header>
-        <h1>Inventory Management System</h1>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-        </nav>
+<body class="bg-gray-100">
+    <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold text-gray-900">Inventory Management System</h1>
+            <nav class="mt-4">
+                <a href="/" class="text-blue-500 hover:underline">Home</a>
+                <a href="/login" class="ml-4 text-blue-500 hover:underline">Login</a>
+                <a href="/register" class="ml-4 text-blue-500 hover:underline">Register</a>
+            </nav>
+        </div>
     </header>
-    <main>
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {% block content %}{% endblock %}
     </main>
-    <footer>
-        <p>&copy; 2025 Inventory Management System. All rights reserevd.</p>
+    <footer class="bg-white border-t mt-8">
+        <div class="max-w-7xl mx-auto py-4 px-4 text-center text-gray-600">
+            &copy; 2025 Inventory Management System. All rights reserved.
+        </div>
     </footer>
 </body>
 </html>
