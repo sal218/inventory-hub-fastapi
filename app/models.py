@@ -18,7 +18,7 @@ class Category(Base):
 class InventoryItem(Base):
     __tablename__ = "inventory_items"
     
-    item_id = Column(Integer, primary_key=True, Index=True)
+    item_id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     description = Column(String, index=True)
     quantity = Column(Integer)
@@ -43,7 +43,7 @@ class Supplier(Base):
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # many suppliers can supply many inventory items (a lit of items the supplier can supply)
-    items = relationship("ItemSuppliers", back_populates="suppplier")
+    items = relationship("ItemSuppliers", back_populates="supplier")
 
 
 class ItemSupplier(Base):
@@ -68,5 +68,5 @@ class User(Base):
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # user could have created many inventory items
-    items_created = relationship("InventoryItems", backref="creator")
+    items_created = relationship("InventoryItem", backref="creator")
 
