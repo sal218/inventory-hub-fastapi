@@ -29,8 +29,28 @@ The Inventory Management System is designed to support with inventory control fo
 ### Database Schema Design (ERD)
 ![ERD Diagram](ERD-Image.png)
 
-### Data Schema Design Decisions
-PENDING
+### Database Schema Design Decisions
+#### The DB contains four main entities
+- Category: 
+  - Stores category details (name, description, created_at). 
+  - Each category can have multiple inventory items, establishing a one-to-many relationship with InventoryItem.
+- InventoryItem: 
+  - Contains details about individual items (name, description, quantity, price, created_at, updated_at) and links to a category via a foreign key. It also tracks which user created the item through a foreign key to the User table.
+- Supplier: 
+  - Manages supplier information. Since an item can be supplied by multiple suppliers and vice-versa, we use a many-to-many relationship between InventoryItem and Supplier, managed via the ItemSupplier join table.
+- User: 
+  - Contains user credentials (username, password, role) and the creation timestamp. Each user can create multiple inventory items.
+
+#### Design Choices
+- Keys: 
+  - Each table has a unique primary key and proper foreign keys to maintain data integrity.
+- Timestamps: 
+  - Timestamps are set dynamically using datetime.now(timezone.utc).
+- Relationships: 
+  - A join table (ItemSupplier) manages the many-to-many relationship between items and suppliers.
+- User Security: 
+  - The User table enforces unique usernames and stores passwords securely.
+
 ### API Endpoints Structure
 
 #### Inventory Items
