@@ -22,7 +22,7 @@
                     <label for="price" class="block text-gray-700">Price</label>
                     <input type="number" step="0.01" id="price" name="price" required class="w-full p-3 border rounded">
                 </div>
-                <div x-data="autocomplete({{ categories|tojson }})" class="relative">
+                <div x-data="autocomplete({{ categories|default([])|tojson }})" x-init="query = ''" class="relative">
                     <label for="category" class="block text-gray-700">Category</label>
                     <input type="text" id="category" name="category" x-model="query" autocomplete="off" placeholder="Type or select category" class="w-full p-3 border rounded">
                     

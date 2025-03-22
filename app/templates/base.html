@@ -1,63 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Inventory Management System{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
-    <script src="/static/js/autocomplete.js" defer></script>
-    <link rel="icon" href="/static/favicon.ico">
+  <meta charset="UTF-8">
+  <title>{% block title %}Inventory Management System{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js" defer></script>
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <link rel="icon" href="/static/favicon.ico">
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
-    <header class="bg-white shadow">
-        <div class="w-full py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-gray-900">Inventory Management System</h1>
-            <nav class="flex items-center">
-                {% if current_user %}
-                    
-                    <div x-data="{ invOpen: false }" class="relative inline-block text-left ml-4">
-                        <button @click="invOpen = !invOpen" type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
-                            Inventory
-                            <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div x-show="invOpen" @click.away="invOpen = false" x-transition class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                            <div class="py-1" role="menu" aria-orientation="vertical">
-                                <a href="/inventory/manage" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Manage Inventory</a>
-                                <a href="/inventory/view" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View Inventory</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div x-data="{ open: false }" class="relative inline-block text-left ml-4">
-                        <button @click="open = !open" type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
-                            {{ current_user.username }}
-                            <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div x-show="open" @click.away="open = false" x-transition class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                            <div class="py-1" role="menu" aria-orientation="vertical">
-                                <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profile</a>
-                                <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <a href="/login" class="ml-4 text-blue-500 hover:underline">Login</a>
-                    <a href="/register" class="ml-4 text-blue-500 hover:underline">Register</a>
-                {% endif %}
-            </nav>
-        </div>
-    </header>
-    <main class="w-full py-6 sm:px-6 lg:px-8 flex-grow">
-        {% block content %}{% endblock %}
-    </main>
-    <footer class="bg-white border-t mt-auto">
-        <div class="w-full py-4 px-4 text-center text-gray-600">
-            &copy; 2025 Inventory Management System. All rights reserved.
-        </div>
-    </footer>
+  <header class="bg-white shadow">
+    <div class="w-full py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+      <h1 class="text-3xl font-bold text-gray-900">Inventory Management System</h1>
+      <nav class="flex items-center">
+        {% if current_user %}
+          <div x-data="{ invOpen: false }" class="relative inline-block text-left ml-4">
+            <button @click="invOpen = !invOpen" type="button" class="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
+              Inventory
+              <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div x-show="invOpen" @click.away="invOpen = false" x-transition class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="/inventory/manage" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Manage Inventory</a>
+                <a href="/inventory/view" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">View Inventory</a>
+              </div>
+            </div>
+          </div>
+          
+          <div x-data="{ open: false }" class="relative inline-block text-left ml-4">
+            <button @click="open = !open" type="button" class="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
+              {{ current_user.username }}
+              <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div x-show="open" @click.away="open = false" x-transition class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div class="py-1" role="menu" aria-orientation="vertical">
+                <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profile</a>
+                <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Logout</a>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <a href="/" class="ml-4 text-blue-500 hover:underline">Home</a>
+          <a href="/login" class="ml-4 text-blue-500 hover:underline">Login</a>
+          <a href="/register" class="ml-4 text-blue-500 hover:underline">Register</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main class="w-full py-6 sm:px-6 lg:px-8 flex-grow">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="bg-white border-t mt-auto">
+    <div class="w-full py-4 px-4 text-center text-gray-600">
+      &copy; 2025 Inventory Management System. All rights reserved.
+    </div>
+  </footer>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="/static/js/script.js" defer></script>
 </body>
 </html>

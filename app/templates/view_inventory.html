@@ -5,7 +5,7 @@
     <h2 class="text-3xl font-bold mb-4">View Inventory</h2>
     
     <form method="get" action="/inventory/view" class="mb-4 flex flex-col md:flex-row items-center gap-4">
-        <input type="text" name="search" placeholder="Search by name" value="{{ search }}" class="flex-grow p-3 border rounded">
+        <input type="text" name="search" placeholder="Search by name" value="{{ search or ''}}" class="flex-grow p-3 border rounded">
         <select name="category_id" class="p-3 border rounded">
             <option value="">All Categories</option>
             {% for category in categories %}
@@ -34,7 +34,7 @@
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap">{{ item.name }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ item.quantity }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ item.price }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f" % item.price }}</td>
                 </tr>
                 {% else %}
                 <tr>

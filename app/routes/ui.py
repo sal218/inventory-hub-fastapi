@@ -125,13 +125,16 @@ async def manage_inventory(request: Request, current_user: User = Depends(get_cu
 async def view_inventory(
     request: Request, 
     search: str | None = None, 
-    category_id: int | None = None,
+    category_id: str | None = None,
     page: int = 1, 
     current_user: User = Depends(get_current_user_from_cookie), 
     db: Session = Depends(get_db)
 ):
     limit = 10
     skip = (page - 1) * limit
+
+    cat_id = int(category_id) if category_id and category_id.strip() else None # convert category_id to int if provided and is non-empty; otherwise we can set to None
+
     items = crud.get_items(db, skip=skip, limit=limit, search=search, category_id=category_id)
 
     prev_page = page - 1 if page > 1 else None
@@ -146,7 +149,7 @@ async def view_inventory(
         "prev_page" : prev_page,
         "next_page" : next_page,
         "search" : search,
-        "selected_category" : category_id,
+        "selected_category" : cat_id,
         "categories" : categories   
     })
 
