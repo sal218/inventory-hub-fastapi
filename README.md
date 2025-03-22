@@ -1,18 +1,33 @@
 # Assignment 3: Inventory Management System
 
-## Part 1: Project Plan
+## Setup and Installation
+###  Build the Docker image
+
+```bash
+docker-compose build
+``` 
+### Start Container 
+```bash
+docker-compose up
+```
+### Access The WebApp
+```bash
+http://localhost:8500
+```
+
+## Project Plan
 
 ### Description
 The Inventory Management System is designed to support with inventory control for small businesses and warehouses. It features a centralized platform for tracking stock levels, managing supplier information and processing orders efficiently. With user-friendly interfaces and robust CRUD functionalities, the system aims to reduce overall manual errors and support informed decision making. 
 
-### Main Features
+## Main Features
 - CRUD Operations:
     - Create, Read, Update, Delete functionalities for inventory items
-    - CRUD operations for managing suppliers and cetegories
+    - CRUD operations for managing suppliers and cetegories (Not Yet Fully Complete - Leaving for Assignment 4 contituation)
 
 - User Interface
     - A modern web interface for managing items and viewing inventory
-    - A simple and intuitive dashboard to display stock levels and alerts
+    - A simple and intuitive dashboard to display stock levels and alerts (Not Yet Complete - Leaving for Assignment 4 contituation)
 
 - Authentication & Authorization
     - User registration, login, and role-based access
@@ -22,14 +37,14 @@ The Inventory Management System is designed to support with inventory control fo
     - List view with pagination for easy browsing
 
 - Time-Permitting Features
-    - Real time updates on inventory changes
-    - Reporting and analytics features 
+    - Real time updates on inventory changes (Not Yet Complete - Leaving for Assignment 4 contituation)
+    - Reporting and analytics features  (Not Yet Complete - Leaving for Assignment 4 contituation)
 
 
-### Database Schema Design (ERD)
+## Database Schema Design (ERD)
 ![ERD Diagram](ERD-Image.png)
 
-### Database Schema Design Decisions
+## Database Schema Design Decisions
 #### The DB contains four main entities
 - Category: 
   - Stores category details (name, description, created_at). 
@@ -51,59 +66,101 @@ The Inventory Management System is designed to support with inventory control fo
 - User Security: 
   - The User table enforces unique usernames and stores passwords securely.
 
-### API Endpoints Structure
 
-#### Inventory Items
-- List all inventory items:  
-  `GET /items`
-- Retrieve details for a single inventory item:  
-  `GET /items/{item_id}`
-- Create a new inventory item:  
-  `POST /items`
-- Update an existing inventory item:  
-  `POST /items/{item_id}`
-- Remove an inventory item from the system:  
-  `DELETE /items/{item_id}`
+## 📚 API Documentation
+
+All endpoints return JSON responses and follow RESTful conventions.
+
+### 🔐 Authentication
+> Some routes are protected and require a valid JWT token in the `Authorization` header as:  
+> `Authorization: Bearer <token>`
 
 ---
 
-#### Suppliers
-- List all suppliers:  
-  `GET /suppliers`
-- Retrieve details for a single supplier:  
-  `GET /suppliers/{supplier_id}`
-- Add a new supplier:  
-  `POST /suppliers`
-- Update an existing supplier:  
-  `POST /suppliers/{supplier_id}`
-- Delete a supplier:  
-  `DELETE /suppliers/{supplier_id}`
+### 📦 Inventory Items
+
+| Method | Endpoint               | Description                            |
+|--------|------------------------|----------------------------------------|
+| GET    | `/items`               | List all inventory items               |
+| GET    | `/items/{item_id}`     | Retrieve details of a single item      |
+| POST   | `/items`               | Create a new inventory item            |
+| POST   | `/items/{item_id}`     | Update an existing inventory item      |
+| DELETE | `/items/{item_id}`     | Delete an inventory item               |
 
 ---
 
-#### Categories
-- List all categories:  
-  `GET /categories`
-- Retrieve details for a single category:  
-  `GET /categories/{category_id}`
-- Create a new category:  
-  `POST /categories`
-- Update an existing category:  
-  `POST /categories/{category_id}`
-- Delete a category:  
-  `DELETE /categories/{category_id}`
+### 🚚 Suppliers
+
+| Method | Endpoint                    | Description                      |
+|--------|-----------------------------|----------------------------------|
+| GET    | `/suppliers`                | List all suppliers               |
+| GET    | `/suppliers/{supplier_id}`  | Get supplier details             |
+| POST   | `/suppliers`                | Add a new supplier               |
+| POST   | `/suppliers/{supplier_id}`  | Update an existing supplier      |
+| DELETE | `/suppliers/{supplier_id}`  | Delete a supplier                |
 
 ---
 
-#### User Authentication & Authorization
-- Register a new user:  
-  `POST /auth/register`
-- Log in an existing user:  
-  `POST /auth/login`
-- Get profile of logged-in user:  
-  `GET /auth/profile`
-- (Admin-only) Access admin-protected endpoint:  
-  `GET /auth/admin`
+### 🗂️ Categories
+
+| Method | Endpoint                     | Description                        |
+|--------|------------------------------|------------------------------------|
+| GET    | `/categories`                | List all categories                |
+| GET    | `/categories/{category_id}`  | Retrieve category details          |
+| POST   | `/categories`                | Create a new category              |
+| POST   | `/categories/{category_id}`  | Update an existing category        |
+| DELETE | `/categories/{category_id}`  | Delete a category                  |
+
+---
+
+### 👤 User Authentication
+
+| Method | Endpoint          | Description                           |
+|--------|-------------------|---------------------------------------|
+| POST   | `/auth/register`  | Register a new user                   |
+| POST   | `/auth/login`     | Log in and retrieve access token      |
+| GET    | `/auth/profile`   | Get the current user's profile        |
+| GET    | `/auth/admin`     | Admin-only protected route            |
+
+---
+### 🖥️ UI-Based Routes (HTML Pages)
+
+These routes serve the frontend HTML pages using Jinja2 templates and manage authentication via cookies.
+
+| Method | Endpoint                  | Description                                |
+|--------|---------------------------|--------------------------------------------|
+| GET    | `/`                       | Home page                                  |
+| GET    | `/login`                  | Login page (form)                          |
+| POST   | `/login`                  | Submit login credentials                   |
+| GET    | `/register`               | Registration page                          |
+| POST   | `/register`               | Submit registration form                   |
+| GET    | `/logout`                 | Logout (clears token and redirects to login) |
+| GET    | `/profile`                | Authenticated user’s profile page          |
+
+---
+
+### 📋 Inventory Management (UI)
+
+| Method | Endpoint                         | Description                                     |
+|--------|----------------------------------|-------------------------------------------------|
+| GET    | `/inventory/manage`              | View all inventory items (admin UI)             |
+| GET    | `/inventory/view`                | Browse/search inventory (user-facing UI)        |
+| POST   | `/inventory/add`                 | Add a new inventory item via UI form            |
+| POST   | `/inventory/edit/{item_id}`      | Edit an existing inventory item via UI form     |
+| GET    | `/inventory/delete/{item_id}`    | Delete an inventory item from UI                |
+
+> 🛑 Most of these routes require login via cookies. Accessing them without authentication will redirect you to the login page.
+
+### 🧪 Interactive API Docs
+
+Once the app is running, you can view and test all API endpoints using OpenAPI Specification at:
+
+**[http://localhost:8500/docs](http://localhost:8500/docs)**  
+
+or use curl:  
+```bash
+curl -X 'GET' 'http://localhost:8500/docs'
+```
 
 
 ## Key Interfaces In UI
@@ -127,6 +184,8 @@ The Inventory Management System is designed to support with inventory control fo
 
 ### View Inventory Dashboard
 ![EditInventory](app/static/images/ViewInventoryDashboard.jpg)
+
+
 
 
 
