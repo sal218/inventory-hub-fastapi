@@ -84,3 +84,29 @@ PENDING
   `GET /auth/profile`
 - (Admin-only) Access admin-protected endpoint:  
   `GET /auth/admin`
+
+
+## Key Interfaces In UI
+### Home Page
+![HomePage](app/static/images/HomePage-Gif.gif)
+
+### Login Page
+![LoginPage](app/static/images/LoginPage.jpg)
+
+### Registration Page
+![RegisterPage](app/static/images/RegisterPage.jpg)
+
+### User Profile
+![ProfilePage](app/static/images/UserProfilePage.jpg)
+
+### Inventory Management Dashboard
+![ManageInventoryDashboard](app/static/images/ManageInventoryDashboard.jpg)
+
+### Edit Inventory (Inside Inventory Management Dashboard)
+![EditInventory](app/static/images/EditInventory.jpg)
+
+### View Inventory Dashboard
+![EditInventory](app/static/images/ViewInventoryDashboard.jpg)
+
+
+
