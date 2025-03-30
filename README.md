@@ -157,7 +157,7 @@ Once the app is running, you can view and test all API endpoints using OpenAPI S
 
 **[http://localhost:8500/docs](http://localhost:8500/docs)**  
 
-or use curl:  
+or use curl:   
 ```bash
 curl -X 'GET' 'http://localhost:8500/docs'
 ```

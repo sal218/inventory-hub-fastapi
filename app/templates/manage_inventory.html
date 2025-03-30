@@ -94,5 +94,13 @@
             {% endfor %}
         </div>
     </div>
+    <div class="mt-4 flex justify-center">
+        {% if prev_page %}
+            <a href="/inventory/manage?page={{ prev_page }}" class="px-4 py-2 bg-gray-300 rounded mr-2">Previous</a>
+        {% endif %}
+        {% if next_page %}
+            <a href="/inventory/manage?page={{ next_page }}" class="px-4 py-2 bg-gray-300 rounded">Next</a>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

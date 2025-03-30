@@ -109,16 +109,35 @@ async def logout(_request: Request):
 
 
 @router.get("/inventory/manage", response_class=HTMLResponse)
-async def manage_inventory(request: Request, current_user: User = Depends(get_current_user_from_cookie), db: Session = Depends(get_db)):
-    items = crud.get_items(db, skip=0, limit=20)
-    categories = crud.get_categories(db)
-    categories_data = [{"category_id": cat.category_id, "name": cat.name} for cat in categories]
-    return templates.TemplateResponse("manage_inventory.html", {
-        "request": request, 
-        "current_user": current_user, 
-        "items": items,
-        "categories": categories_data
-    })
+async def manage_inventory(
+    request: Request,
+    search: str | None = None,
+    page: int = 1,
+    category_id: str | None = None, 
+    current_user: User = Depends(get_current_user_from_cookie), 
+    db: Session = Depends(get_db)
+    ):
+        limit = 10
+        skip = (page - 1) * limit
+        cat_id = int(category_id) if category_id and category_id.strip() else None 
+
+        items = crud.get_items(db, skip=skip, limit=limit)
+
+        prev_page = page - 1 if page > 1 else None
+        next_page = page + 1 if len(items) == limit else None
+
+        categories = crud.get_categories(db)
+        categories_data = [{"category_id": cat.category_id, "name": cat.name} for cat in categories]
+        return templates.TemplateResponse("manage_inventory.html", {
+            "request": request, 
+            "current_user": current_user, 
+            "limit" : limit,
+            "prev_page" : prev_page,
+            "next_page" : next_page,
+            "search": search,
+            "items": items,
+            "categories": categories_data
+        })
 
 
 @router.get("/inventory/view", response_class=HTMLResponse)
