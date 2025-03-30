@@ -9,6 +9,7 @@ from app.database import get_db
 from app import crud, schemas
 from app.models import User, Category
 from app.routes.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
+from app.currency_utils import get_exchange_rate
 
 
 router = APIRouter()
@@ -145,6 +146,7 @@ async def view_inventory(
     request: Request, 
     search: str | None = None, 
     category_id: str | None = None,
+    currency: str = "CAD", 
     page: int = 1, 
     current_user: User = Depends(get_current_user_from_cookie), 
     db: Session = Depends(get_db)
@@ -155,6 +157,14 @@ async def view_inventory(
     cat_id = int(category_id) if category_id and category_id.strip() else None # convert category_id to int if provided and is non-empty; otherwise we can set to None
 
     items = crud.get_items(db, skip=skip, limit=limit, search=search, category_id=category_id)
+
+    exchange_rate = 1.0
+    if currency != "CAD":
+        exchange_rate = await get_exchange_rate("CAD", currency) # get exchange rate
+    
+    # apply the exchange rate to item prices dynamically
+    for item in items:
+        item.price = float(item.price) * exchange_rate
 
     prev_page = page - 1 if page > 1 else None
     next_page = page + 1 if len(items) == limit else None
@@ -167,8 +177,11 @@ async def view_inventory(
         "items" : items,
         "prev_page" : prev_page,
         "next_page" : next_page,
+        "page" : page,
         "search" : search,
         "selected_category" : cat_id,
+        "currency" : currency,
+        "exchange_rate" : exchange_rate,
         "categories" : categories   
     })
 

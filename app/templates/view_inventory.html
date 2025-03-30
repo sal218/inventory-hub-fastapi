@@ -14,12 +14,23 @@
                 </option>
             {% endfor %}
         </select>
+        <!-- currency selector -->
+        <select name="currency" class="p-3 border rounded" onchange="this.form.submit()">
+            <option value="CAD" {% if currency == 'CAD' %}selected{% endif %}>CAD</option>
+            <option value="USD" {% if currency == 'USD' %}selected{% endif %}>USD</option>
+            <option value="EUR" {% if currency == 'EUR' %}selected{% endif %}>EUR</option>
+            <option value="GBP" {% if currency == 'GBP' %}selected{% endif %}>GBP</option>
+        </select>
+        <!--hidden input to preserve current page-->
+        <input type="hidden" name="page" value="{{ page or 1 }}">
+
         <button type="submit" class="bg-blue-500 text-white py-3 px-6 rounded hover:bg-blue-600">
             Search
         </button>
     </form>
     
     
+    <!-- inventory table -->
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -34,7 +45,7 @@
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap">{{ item.name }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ item.quantity }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f" % item.price }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ "%.2f" % item.price }} {{ currency }}</td>
                 </tr>
                 {% else %}
                 <tr>
@@ -47,10 +58,10 @@
     
     <div class="mt-4 flex justify-center">
         {% if prev_page %}
-            <a href="/inventory/view?page={{ prev_page }}{% if search %}&search={{ search }}{% endif %}{% if selected_category %}&category_id={{ selected_category }}{% endif %}" class="px-4 py-2 bg-gray-300 rounded mr-2">Previous</a>
+            <a href="/inventory/view?page={{ prev_page }}{% if search %}&search={{ search }}{% endif %}{% if selected_category %}&category_id={{ selected_category }}{% endif %}&currency={{ currency }}" class="px-4 py-2 bg-gray-300 rounded mr-2">Previous</a>
         {% endif %}
         {% if next_page %}
-            <a href="/inventory/view?page={{ next_page }}{% if search %}&search={{ search }}{% endif %}{% if selected_category %}&category_id={{ selected_category }}{% endif %}" class="px-4 py-2 bg-gray-300 rounded">Next</a>
+            <a href="/inventory/view?page={{ next_page }}{% if search %}&search={{ search }}{% endif %}{% if selected_category %}&category_id={{ selected_category }}{% endif %}&currency={{ currency }}" class="px-4 py-2 bg-gray-300 rounded">Next</a>
         {% endif %}
     </div>
 </div>
