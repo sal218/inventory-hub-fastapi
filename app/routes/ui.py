@@ -122,7 +122,7 @@ async def manage_inventory(
         skip = (page - 1) * limit
         cat_id = int(category_id) if category_id and category_id.strip() else None 
 
-        items = crud.get_items(db, skip=skip, limit=limit)
+        items = crud.get_items(db, skip=skip, limit=limit, created_by=current_user.user_id)
 
         prev_page = page - 1 if page > 1 else None
         next_page = page + 1 if len(items) == limit else None
@@ -156,7 +156,7 @@ async def view_inventory(
 
     cat_id = int(category_id) if category_id and category_id.strip() else None # convert category_id to int if provided and is non-empty; otherwise we can set to None
 
-    items = crud.get_items(db, skip=skip, limit=limit, search=search, category_id=category_id)
+    items = crud.get_items(db, skip=skip, limit=limit, created_by=current_user.user_id)
 
     exchange_rate = 1.0
     if currency != "CAD":

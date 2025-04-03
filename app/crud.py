@@ -28,13 +28,22 @@ def create_item(db: Session, item: InventoryItemCreate) -> InventoryItem:
 def get_item(db: Session, item_id: int) -> InventoryItem | None:
     return db.query(InventoryItem).filter(InventoryItem.item_id == item_id).first() # queries the InventoryItem table where row matches with item_id
 
-def get_items(db: Session, skip: int = 0, limit: int = 10, search: str | None = None, category_id: int | None = None) -> list[InventoryItem]:
-    query = db.query(InventoryItem)
-    if search:
-        query = query.filter(InventoryItem.name.ilike(f"%{search}")) # filters item where name contains the search term or even partial matches
-    if category_id:
-        query = query.filter(InventoryItem.category_id == category_id) # filters item by the category if it is provided 
-    return query.offset(skip).limit(limit).all() # skips first defined skip value records, limits the number of results and returns a list of results
+def get_items(
+        db: Session, 
+        skip: int = 0, 
+        limit: int = 10, 
+        search: str | None = None, 
+        category_id: int | None = None,
+        created_by: int | None = None
+    ) -> list[InventoryItem]:
+        query = db.query(InventoryItem)
+        if search:
+            query = query.filter(InventoryItem.name.ilike(f"%{search}")) # filters item where name contains the search term or even partial matches
+        if category_id:
+            query = query.filter(InventoryItem.category_id == category_id) # filters item by the category if it is provided 
+        if created_by:
+            query = query.filter(InventoryItem.created_by == created_by)
+        return query.offset(skip).limit(limit).all() # skips first defined skip value records, limits the number of results and returns a list of results
 
 
 # update a specific inventory item based on provided data
