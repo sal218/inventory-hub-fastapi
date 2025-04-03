@@ -14,6 +14,13 @@ from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto") # this is used so we can apply password hashing for more security
 
 
+# Helper: get user by ID (prevents users from editting/deleting other users inventory values)
+def get_item_by_user(db: Session, item_id: int, user_id: int) -> InventoryItem | None:
+    return db.query(InventoryItem).filter(
+        InventoryItem.item_id == item_id,
+        InventoryItem.created_by == user_id
+    ).first()
+
 # Inventory Item CRUD
 
 # create a new inventory item

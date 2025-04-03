@@ -10,6 +10,7 @@ from app import crud, schemas
 from app.models import User, Category
 from app.routes.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from app.currency_utils import get_exchange_rate
+from app.crud import get_item_by_user
 
 
 router = APIRouter()
@@ -235,7 +236,7 @@ async def edit_inventory_item(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user_from_cookie)
 ):
-    item = crud.get_item(db, item_id)
+    item = crud.get_item_by_user(db, item_id, current_user.user_id)
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
     
@@ -270,7 +271,7 @@ async def delete_inventory_item(
     db: Session = Depends(get_db), 
     current_user: User = Depends(get_current_user_from_cookie)
 ):
-    item = crud.get_item(db, item_id)
+    item = crud.get_item_by_user(db, item_id, current_user.user_id)
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
     crud.delete_item(db, item_id)
