@@ -28,8 +28,8 @@ async def login_page(request: Request):
 @router.post("/login", response_class=HTMLResponse)
 async def login_user(
     request: Request,
-    username: str = Form(...), # extracts username from submitted form
-    password: str = Form(...), # extracts password from submitted form
+    username: str = Form(..., max_length=50), # extracts username from submitted form
+    password: str = Form(..., max_length=100), # extracts password from submitted form
     db: Session = Depends(get_db)
 ):  
     # check user credentials from db
@@ -58,9 +58,9 @@ async def register_page(request: Request):
 @router.post("/register", response_class=HTMLResponse)
 async def register_user(
     request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    role:  str = Form(...),
+    username: str = Form(..., max_length=50),
+    password: str = Form(..., max_length=100),
+    role:  str = Form(..., max_length=20),
     db: Session = Depends(get_db)
 ):
     # we first check if the user exists
@@ -189,8 +189,8 @@ async def view_inventory(
 @router.post("/inventory/add", response_class=RedirectResponse)
 async def add_inventory_item(
     request: Request,
-    name: str = Form(...),
-    description: str = Form(""),
+    name: str = Form(..., max_length=100),
+    description: str = Form("", max_length=255),
     quantity: int = Form(...),
     price: float = Form(...),
     category: str = Form(...),  
@@ -227,8 +227,8 @@ async def add_inventory_item(
 async def edit_inventory_item(
     item_id: int,
     request: Request,
-    name: str = Form(...),
-    description: str = Form(""),
+    name: str = Form(..., max_length=100),
+    description: str = Form("", max_length=255),
     quantity: int = Form(...),
     price: float = Form(...),
     category: str = Form(""),  
