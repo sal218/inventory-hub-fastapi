@@ -1,7 +1,10 @@
 from pydantic import BaseModel, condecimal, Field
 from datetime import datetime
 from decimal import Decimal
-from typing import List, Annotated
+from typing import List, Annotated, ForwardRef
+
+SupplierRef = ForwardRef("Supplier")
+
 
 # Category
 
@@ -38,6 +41,7 @@ class InventoryItemBase(BaseModel):
 class InventoryItemCreate(InventoryItemBase):
     category_id: int
     created_by: int 
+    supplier: str | None = None
 
 class InventoryItemUpdate(BaseModel):
     name: str | None = None
@@ -53,6 +57,7 @@ class InventoryItem(InventoryItemBase):
     created_at: datetime
     updated_at: datetime
     category: Category
+    suppliers: List["Supplier"] = [] 
 
     class Config:
         orm_mode = True
@@ -98,7 +103,7 @@ class User(UserBase):
     created_at: datetime
 
     class Config:
-        ord_mode = True
+        orm_mode = True
 
 
 class UserPasswordUpdate(BaseModel):
@@ -107,3 +112,5 @@ class UserPasswordUpdate(BaseModel):
 
     class Config:
         orm_mode = True
+
+InventoryItem.model_rebuild()

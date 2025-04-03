@@ -2,13 +2,13 @@ import csv
 import json
 import requests
 
-login_url = "http://127.0.0.1:8000/login"
-upload_url = "http://127.0.0.1:8000/inventory/add"
+login_url = "http://127.0.0.1:8500/login"
+upload_url = "http://127.0.0.1:8500/inventory/add"
 
 
 login_payload = {
-    "username": "Enter User Name",  # Replace with a valid username
-    "password": "Password to that account"   # Replace with the corresponding password
+    "username": "",  # Replace with a valid username
+    "password": ""   # Replace with the corresponding password
 }
 
 
@@ -23,7 +23,7 @@ else:
     print("Login successful.")
 
 # path to the CSV file 
-csv_file_path = "demo/inventory_items.csv"
+csv_file_path = "Path to csv file"
 
 with open(csv_file_path, mode="r", newline="", encoding="utf-8") as csvfile:
     reader = csv.DictReader(csvfile)
@@ -34,7 +34,8 @@ with open(csv_file_path, mode="r", newline="", encoding="utf-8") as csvfile:
             "quantity": row["quantity"],
             "price": row["price"],
             "category": row["category"],
-            "category_id": row.get("category_id", "")
+            "category_id": row.get("category_id", ""),
+            "supplier": row.get("supplier", "")
         }
         response = session.post(upload_url, data=data)
         if response.status_code in (200, 302):

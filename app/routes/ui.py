@@ -194,7 +194,8 @@ async def add_inventory_item(
     quantity: int = Form(...),
     price: float = Form(...),
     category: str = Form(...),  
-    category_id: str = Form(""),  
+    category_id: str = Form(""),
+    supplier: str = Form("", max_length=100),  
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user_from_cookie)
 ):
@@ -216,6 +217,7 @@ async def add_inventory_item(
         description=description,
         quantity=quantity,
         price=price,
+        supplier=supplier,
         category_id=cat_id,
         created_by=current_user.user_id
     )

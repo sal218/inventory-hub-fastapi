@@ -40,7 +40,15 @@ The Inventory Management System is designed to support with inventory control fo
     - Real time updates on inventory changes (Not Yet Complete - Leaving for Assignment 4 contituation)
     - Reporting and analytics features  (Not Yet Complete - Leaving for Assignment 4 contituation)
 
-
+## Basic Integration Added (Assignment 4)
+### Currency Exchange API 
+**API Utilized:** Frankfurter<br>
+**Use Case:**  Helps international users view product prices in their local currency. Users can change the price dynamically (which defaults to CAD) to one of the following currencies: <br>
+1. CAD
+2. USD
+3. EUR
+4. GBP
+---
 ## Database Schema Design (ERD)
 ![ERD Diagram](ERD-Image.png)
 

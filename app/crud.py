@@ -25,10 +25,37 @@ def get_item_by_user(db: Session, item_id: int, user_id: int) -> InventoryItem |
 
 # create a new inventory item
 def create_item(db: Session, item: InventoryItemCreate) -> InventoryItem:
-    db_item = InventoryItem(**item.model_dump())
+    db_item = InventoryItem(
+        name=item.name,
+        description=item.description,
+        quantity=item.quantity,
+        price=item.price,
+        category_id=item.category_id,
+        created_by=item.created_by
+    )
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
+
+    if item.supplier and item.supplier.strip():
+        # we check if the supplier already exists
+        existing_supplier = db.query(Supplier).filter(Supplier.name == item.supplier).first()
+
+        if not existing_supplier:
+            # create new supplier
+            new_supplier = Supplier(name=item.supplier, contact_details="")
+            db.add(new_supplier)
+            db.commit()
+            db.refresh(new_supplier)
+            supplier_id = new_supplier.supplier_id
+        else:
+            supplier_id = existing_supplier.supplier_id
+        
+        # create the link in ItemSupplier table
+        item_supplier_link = ItemSupplier(item_id=db_item.item_id, supplier_id=supplier_id)
+        db.add(item_supplier_link)
+        db.commit()
+
     return db_item
 
 # retrieve an inventory item by its id
