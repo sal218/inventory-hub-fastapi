@@ -3,6 +3,7 @@ appdirs==1.4.4
 attrs==23.2.0
 autocommand==2.2.2
 Automat==22.10.0
+authlib==1.5.2
 Babel==2.14.0
 bcrypt==4.2.0
 beautifulsoup4==4.12.3

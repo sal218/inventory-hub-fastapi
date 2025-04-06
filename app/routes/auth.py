@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from datetime import timezone
 import jwt
 from jwt.exceptions import InvalidTokenError
+import os
+from dotenv import load_dotenv
 
 
 from app import crud, schemas
@@ -12,7 +14,27 @@ from app.database import get_db
 from app.models import User
 
 
-SECRET_KEY = "e7131ead47aeae655f8e5a912d896695099be22c4bbe0b72b210ef52e3011c64" # used openssl rand -hex 32 to generate (will be better to store as envrionment var later)
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+# Google OAuth2 sign in 
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
+# validation of critical variables
+missing_vars = []
+if not SECRET_KEY:
+    missing_vars.append("SECRET_KEY")
+if not GOOGLE_CLIENT_ID:
+    missing_vars.append("GOOGLE_CLIENT_ID")
+if not GOOGLE_CLIENT_SECRET:
+    missing_vars.append("GOOGLE_CLIENT_SECRET")
+
+if missing_vars:
+    raise RuntimeError(f"Missing environment variables: {', '.join(missing_vars)}")
+
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

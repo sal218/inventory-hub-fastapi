@@ -11,7 +11,13 @@ from app.models import User, Category
 from app.routes.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from app.currency_utils import get_exchange_rate
 from app.crud import get_item_by_user
+import os
 
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")  # fallback if not set
+
+if not SECRET_KEY:
+    raise RuntimeError("Missing SECRET_KEY in environment")
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
