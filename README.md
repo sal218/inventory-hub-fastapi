@@ -40,15 +40,7 @@ The Inventory Management System is designed to support with inventory control fo
     - Real time updates on inventory changes (Not Yet Complete - Leaving for Assignment 4 contituation)
     - Reporting and analytics features  (Not Yet Complete - Leaving for Assignment 4 contituation)
 
-## Basic Integration Added (Assignment 4)
-### Currency Exchange API 
-**API Utilized:** Frankfurter<br>
-**Use Case:**  Helps international users view product prices in their local currency. Users can change the price dynamically (which defaults to CAD) to one of the following currencies: <br>
-1. CAD
-2. USD
-3. EUR
-4. GBP
----
+
 ## Database Schema Design (ERD)
 ![ERD Diagram](ERD-Image.png)
 
@@ -169,7 +161,35 @@ or use curl:
 ```bash
 curl -X 'GET' 'http://localhost:8500/docs'
 ```
+## ✨ Integration Added (Assignment 4 Update)
+### Currency Exchange API 
+**API Utilized:** Frankfurter<br>
+**Use Case:**  Helps international users view product prices in their local currency. Users can change the price dynamically (which defaults to CAD) to one of the following currencies: <br>
+1. CAD
+2. USD
+3. EUR
+4. GBP
+---
+## 🔐 Google Single Sign-On (SSO) Integration (Assignment 4 Update)
 
+This project supports secure Google Single Sign-On (OAuth2) for user authentication.
+
+### How It Works
+- Users can click **"Sign in with Google"** on the login page to authenticate via their Google account.
+- Upon successful login, a secure JWT is issued and stored as an HTTP-only cookie.
+- If the user is new, a corresponding user record is automatically created with a default "Regular" role.
+
+### Configuration
+To enable Google SSO, make sure your `.env` file includes the following variables:
+
+```env
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+REDIRECT_URI=http://localhost:8500/auth/google/callback
+```
+Google SSO enhances user experience and provides a secure, passwordless authentication option.
+
+**Important:** The `REDIRECT_URI` must also be registered in your Google Cloud Console for the OAuth2 credentials.
 
 ## Key Interfaces In UI
 ### Home Page
