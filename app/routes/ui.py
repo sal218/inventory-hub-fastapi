@@ -359,12 +359,3 @@ async def dashboard(request: Request, db: Session = Depends(get_db), current_use
             "top_suppliers" : top_suppliers
         }
     })
-
-
-
-
-
-
-
-
-
