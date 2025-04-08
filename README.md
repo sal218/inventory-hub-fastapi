@@ -1,16 +1,34 @@
 # Inventory Management System
 
 ## Setup and Installation
-###  Build the Docker image
+
+### 📥 Clone the Repository
+
+You can clone the project from either GitHub or GitLab:
+
+#### GitHub:
+```bash
+git clone https://github.com/sal218/inventory-hub-fastapi.git
+# or using SSH
+git clone git@github.com:sal218/inventory-hub-fastapi.git
+```
+#### GitLab (UFV):
+```bash
+git clone https://sc-gitlab.ufv.ca/202501comp351on1/sa95/project.git
+# or using SSH
+git clone git@sc-gitlab.ufv.ca:202501comp351on1/sa95/project.git
+```
+
+### 🛠️ Build the Docker image
 
 ```bash
 docker-compose build
 ``` 
-### Start Container 
+### ▶️ Start Container 
 ```bash
 docker-compose up
 ```
-### Access The WebApp
+### 🌐 Access The WebApp
 ```bash
 http://localhost:8500/
 ```
