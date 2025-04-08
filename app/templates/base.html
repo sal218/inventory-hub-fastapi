@@ -9,6 +9,7 @@
   <link rel="icon" href="/static/favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -17,6 +18,9 @@
       <h1 class="text-3xl font-bold text-gray-900">Inventory Management System</h1>
       <nav class="flex items-center">
         {% if current_user %}
+          <div>
+            <a href="/dashboard" class="ml-4 text-blue-500 hover:underline">Dashboard</a>
+          </div>
           <div x-data="{ invOpen: false }" class="relative inline-block text-left ml-4">
             <button @click="invOpen = !invOpen" type="button" class="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none">
               Inventory
@@ -64,5 +68,9 @@
   </footer>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="/static/js/script.js" defer></script>
+  <!-- ensures script only loads on the /dashboard route-->
+  {% if 'dashboard' in request.url.path %}
+    <script src="/static/js/dashboard.js" defer></script>
+  {% endif %}
 </body>
 </html>

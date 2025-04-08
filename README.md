@@ -30,7 +30,7 @@ The Inventory Management System is designed to support with inventory control fo
     - A simple and intuitive dashboard to display stock levels and alerts (Not Yet Complete - Leaving for Assignment 4 contituation)
 
 - Authentication & Authorization
-    - User registration, login, and role-based access
+    - User registration, login, Google OAuth2 SSO, and role-based access
 
 - Search and Pagenation
     - Ability to search items based on name, category, or supplier

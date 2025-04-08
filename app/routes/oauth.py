@@ -10,6 +10,8 @@ from app.routes.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
 
+# Google OAuth2 SSO
+
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = "http://localhost:8500/auth/google/callback"
@@ -84,3 +86,5 @@ def google_callback(request: Request, code: str, db: Session = Depends(get_db)):
     response = RedirectResponse(url="/profile")
     response.set_cookie(key="access_token", value=jwt_token, httponly=True)
     return response
+
+

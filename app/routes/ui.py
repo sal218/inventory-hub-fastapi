@@ -5,12 +5,14 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 import jwt
 
+from app import models, schemas, crud
 from app.database import get_db
 from app import crud, schemas
-from app.models import User, Category
+from app.models import User, Category, InventoryItem, Supplier
 from app.routes.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from app.currency_utils import get_exchange_rate
-from app.crud import get_item_by_user
+from app.crud import get_item_by_user 
+
 import os
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -284,6 +286,81 @@ async def delete_inventory_item(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
     crud.delete_item(db, item_id)
     return RedirectResponse(url="/inventory/manage", status_code=status.HTTP_302_FOUND)
+
+
+# dashboard route
+
+@router.get("/dashboard", response_class=HTMLResponse)
+async def dashboard(request: Request, db: Session = Depends(get_db), current_user: User = Depends(get_current_user_from_cookie)):
+    items = db.query(models.InventoryItem).filter(models.InventoryItem.created_by == current_user.user_id).all()
+
+    # total inventory value
+    total_inventory_value = sum(item.quantity * float(item.price) for item in items)
+
+    # top categories
+    category_data = {} # {'category name': 'count'}
+    for item in items:
+        cat_name = item.category.name if item.category else "uncategorized"
+        category_data[cat_name] = 1 + category_data.get(cat_name, 0)
+
+    category_labels = list(category_data.keys()) # keys aka cat names
+    category_counts = list(category_data.values()) # count
+
+    # price distribution buckets
+    price_ranges = ["0–50", "51–100", "101–200", "201–500", "500+"]
+    price_counts = [0,0,0,0,0]
+    for item in items:
+        p = float(item.price)
+        if p <= 50:
+            price_counts[0] += 1
+        elif p <= 100:
+            price_counts[1] += 1
+        elif p <= 200:
+            price_counts[2] += 1
+        elif p <= 500:
+            price_counts[3] += 1
+        else:
+            price_counts[4] += 1
+
+    # low stock items
+    low_stock_items = [item for item in items if item.quantity < 10] # if item quantity less than 10, the item stock is low
+
+    # supplier overview
+    supplier_names = []
+    for item in items:
+        if item.suppliers: # check if item has suppliers
+            first_supplier = item.suppliers[0] # get first ItemSupplier object in db in that first row
+            supplier = first_supplier.supplier # access the supplier object
+            supplier_name = supplier.name # get the name of the supplier
+            supplier_names.append(supplier_name)
+    
+    unique_suppliers = len(set(supplier_names)) 
+    supplier_counts = {} # {'supplier names' : '# of items each supplier provides'}
+    for s in supplier_names:
+        supplier_counts[s] = 1 + supplier_counts.get(s, 0)
+    
+    top_suppliers = sorted(supplier_counts.items(), key=lambda x: x[1], reverse=True)[:5] # x = ("Supplier Name", item count). Sorts based on the count in the tuple, return top 5 supplier pairs by item count
+    
+    # recently added items
+    recent_items = sorted(items, key=lambda x: x.created_at, reverse=True)[:5]
+
+    return templates.TemplateResponse("dashboard.html", {
+        "request": request,
+        "current_user": current_user,
+        "total_inventory_value": total_inventory_value,
+        "category_labels" : category_labels,
+        "category_counts" : category_counts,
+        "price_ranges": price_ranges,
+        "price_counts" : price_counts,
+        "low_stock_items": low_stock_items,
+        "recent_items": recent_items,
+        "supplier_overview": {
+            "unique_suppliers": unique_suppliers,
+            "top_suppliers" : top_suppliers
+        }
+    })
+
+
 
 
 
