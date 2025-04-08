@@ -1,4 +1,4 @@
-# Assignment 3: Inventory Management System
+# Inventory Management System
 
 ## Setup and Installation
 ###  Build the Docker image
@@ -101,7 +101,7 @@ The Inventory Management System is designed to streamline inventory control for 
 
 ---
 
-### 🚀 Time-Permitting / Future Features (Assignment 4 Roadmap)
+### 🚀 Time-Permitting / Future Features 
 
 - 🟡 **Category CRUD Completion**  
   Enhance category editing and viewing experience
