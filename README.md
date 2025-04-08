@@ -12,33 +12,117 @@ docker-compose up
 ```
 ### Access The WebApp
 ```bash
-http://localhost:8500
+http://localhost:8500/
 ```
 
-## Project Plan
+---
 
-### Description
-The Inventory Management System is designed to support with inventory control for small businesses and warehouses. It features a centralized platform for tracking stock levels, managing supplier information and processing orders efficiently. With user-friendly interfaces and robust CRUD functionalities, the system aims to reduce overall manual errors and support informed decision making. 
+### ⚙️ Environment Configuration
 
-## Main Features
-- CRUD Operations:
-    - Create, Read, Update, Delete functionalities for inventory items
-    - CRUD operations for managing suppliers and cetegories (Not Yet Fully Complete - Leaving for Assignment 4 contituation)
+This project uses a `.env` file to store sensitive credentials and configuration variables.
 
-- User Interface
-    - A modern web interface for managing items and viewing inventory
-    - A simple and intuitive dashboard to display stock levels and alerts (Not Yet Complete - Leaving for Assignment 4 contituation)
+#### ✅ Required Environment Variables
 
-- Authentication & Authorization
-    - User registration, login, Google OAuth2 SSO, and role-based access
+| Variable Name          | Description                                                             |
+|------------------------|-------------------------------------------------------------------------|
+| `SECRET_KEY`           | Used to sign JWT tokens for secure authentication                      |
+| `GOOGLE_CLIENT_ID`     | Google OAuth 2.0 client ID (for login with Google)                      |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth 2.0 client secret (for login with Google)                  |
 
-- Search and Pagenation
-    - Ability to search items based on name, category, or supplier
-    - List view with pagination for easy browsing
+---
 
-- Time-Permitting Features
-    - Real time updates on inventory changes (Not Yet Complete - Leaving for Assignment 4 contituation)
-    - Reporting and analytics features  (Not Yet Complete - Leaving for Assignment 4 contituation)
+### 📄 .env File
+
+Create a `.env` file in the **root of the project directory** (same level as `docker-compose.yml`) and add the following:
+
+```env
+SECRET_KEY=your_very_secret_key_here
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+```
+### 📦 .env.example
+To help other developers get started quickly, a .env.example file is included in the repo.
+It contains the structure and placeholder values for required variables:
+```env
+SECRET_KEY=your_secret_key_here
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+```
+Developers should copy this file and rename it to `.env`
+
+## 🗺️ Project Plan
+
+### 📝 Description
+The Inventory Management System is designed to streamline inventory control for small businesses, warehouses, and retail teams. It provides a centralized platform to track stock levels, manage supplier and category information, view insightful dashboards, and process inventory efficiently. Built with FastAPI and a modern web frontend, the system emphasizes usability, security, and extendability.
+
+---
+
+### 🌟 Main Features
+
+#### ✅ CRUD Operations
+- Full Create, Read, Update, Delete support for:
+  - Inventory items
+  - Suppliers
+  - Categories
+
+#### ✅ User Interface
+- Clean and responsive web interface using Jinja2 + Tailwind CSS
+- Inventory management pages (Admin and User views) [Not fully implemeted]
+- Dedicated pages for managing and viewing inventory
+
+#### ✅ Dashboard with Visual Insights
+- 📊 Inventory dashboard displaying:
+  - Total inventory value
+  - Unique and top suppliers
+  - Category breakdown via pie chart
+  - Price distribution via bar chart
+  - Low stock alerts
+  - Recently added items
+- Powered by **Chart.js** with a clean Tailwind UI
+- `/dashboard` route with server-rendered stats + frontend dynamic charts
+
+#### ✅ Authentication & Authorization
+- Secure login and registration with password hashing
+- Cookie-based JWT authentication
+- Google OAuth 2.0 SSO login integration
+- Role-based access control (Admin vs Regular)
+
+#### ✅ Search & Pagination
+- Inventory item search by:
+  - Name
+  - Category
+  - Supplier
+- Page-by-page browsing with pagination controls
+
+#### ✅ API with OpenAPI Support
+- RESTful API endpoints for all core resources
+- OpenAPI docs at `/docs` for easy testing and development
+- Includes `/api/dashboard` endpoints for summary and low stock API
+
+---
+
+### 🚀 Time-Permitting / Future Features (Assignment 4 Roadmap)
+
+- 🟡 **Category CRUD Completion**  
+  Enhance category editing and viewing experience
+
+- 🟡 **Real-Time Inventory Updates**  
+  WebSocket or polling-based updates for changes without page refresh
+
+- 🟡 **Advanced Reporting & Analytics**  
+  Exportable reports (CSV, PDF), deeper analytics for trends over time
+
+- 🟡 **Inventory History Logs**  
+  Track when items are added, edited, or deleted for audit trail
+
+---
+
+### 🛠️ Tech Stack
+- **Backend**: FastAPI + SQLAlchemy
+- **Frontend**: Jinja2 + Tailwind CSS + Chart.js
+- **Database**: SQLite (for development)
+- **Auth**: JWT + Google OAuth 2.0
+- **Containerization**: Docker + Docker Compose
 
 
 ## Database Schema Design (ERD)
@@ -149,7 +233,66 @@ These routes serve the frontend HTML pages using Jinja2 templates and manage aut
 | POST   | `/inventory/edit/{item_id}`      | Edit an existing inventory item via UI form     |
 | GET    | `/inventory/delete/{item_id}`    | Delete an inventory item from UI                |
 
+### 📊 Dashboard (UI + API) (Assignment 4 update)
+
+| Method | Endpoint                 | Description                                              |
+|--------|--------------------------|----------------------------------------------------------|
+| GET    | `/dashboard`             | Authenticated dashboard with charts and metrics (UI)     |
+
+---
+
+### 📈 Dashboard API Endpoints (Assignment 4 update)
+
+| Method | Endpoint                     | Description                                      |
+|--------|------------------------------|--------------------------------------------------|
+| GET    | `/api/dashboard/summary`     | Returns total inventory value and item count     |
+| GET    | `/api/dashboard/low-stock`   | Returns low stock items (quantity < 10)          |
+
+---
+
+### 🔐 OAuth2 Authentication (Google) (Assignment 4 update)
+
+| Method | Endpoint                      | Description                                      |
+|--------|-------------------------------|--------------------------------------------------|
+| GET    | `/auth/google/login`          | Redirects user to Google login screen            |
+| GET    | `/auth/google/callback`       | Handles callback and logs user in via JWT token  |
 > 🛑 Most of these routes require login via cookies. Accessing them without authentication will redirect you to the login page.
+
+### 🎮 Client Demo — Using the API
+---
+
+This project includes a **fully functional HTML client** (built with Jinja2 and served by FastAPI) that **demonstrates real usage of the API** through:
+
+- ✅ **User Authentication** — Register/Login through UI forms  
+- ✅ **Inventory Management** — Add, edit, delete items using form inputs  
+- ✅ **Dynamic Data Rendering** — View inventory, search, filter by category  
+- ✅ **Analytics Dashboard** — Visualizes data from API using Chart.js (e.g., top categories, price buckets, suppliers)
+
+You can interact with these features at:
+
+| UI Page                     | Description                                         |
+|----------------------------|-----------------------------------------------------|
+| `/login`, `/register`      | Authenticates users with forms                     |
+| `/inventory/manage`        | Uses API to manage inventory items                 |
+| `/inventory/view`          | Shows searchable inventory via API queries         |
+| `/dashboard`               | Visualizes data using chart-powered API responses  |
+
+---
+
+### 🔧 Example: API in Action
+
+These UI routes rely on underlying API calls like:
+
+```http
+GET /api/dashboard/summary
+GET /api/dashboard/low-stock
+``` 
+You can also test these directly via:
+```bash
+curl -X GET http://localhost:8500/api/dashboard/summary \
+  --cookie "access_token=<your_token_here>"
+
+```
 
 ### 🧪 Interactive API Docs
 
@@ -191,6 +334,7 @@ Google SSO enhances user experience and provides a secure, passwordless authenti
 
 **Important:** The `REDIRECT_URI` must also be registered in your Google Cloud Console for the OAuth2 credentials.
 
+
 ## Key Interfaces In UI
 ### Home Page
 ![HomePage](app/static/images/HomePage-Gif.gif)
@@ -204,14 +348,17 @@ Google SSO enhances user experience and provides a secure, passwordless authenti
 ### User Profile
 ![ProfilePage](app/static/images/UserProfilePage.jpg)
 
-### Inventory Management Dashboard
+### Inventory Management Page
 ![ManageInventoryDashboard](app/static/images/ManageInventoryDashboard.jpg)
 
-### Edit Inventory (Inside Inventory Management Dashboard)
+### Edit Inventory (Inside Inventory Management Page)
 ![EditInventory](app/static/images/EditInventory.jpg)
 
-### View Inventory Dashboard
+### View Inventory Page
 ![EditInventory](app/static/images/ViewInventoryDashboard.jpg)
+
+### Inventory Dashboard (Updated For Assignment 4)
+![Dashboard](app/static/images/Dashboard.jpg)
 
 
 
