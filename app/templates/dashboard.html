@@ -58,7 +58,7 @@
       {% for item in recent_items %}
       <div class="border p-4 rounded shadow hover:shadow-lg transition">
         <h3 class="font-semibold">{{ item.name }}</h3>
-        <p class="text-sm text-gray-600">Qty: {{ item.quantity }} | ${{ item.price }}</p>
+        <p class="text-sm text-gray-600">Qty: {{ item.quantity }} | ${{ "%.2f" % item.price }}</p>
         <p class="text-xs text-gray-400">Added on {{ item.created_at.strftime('%Y-%m-%d') }}</p>
       </div>
       {% endfor %}
