@@ -355,23 +355,24 @@ Google SSO enhances user experience and provides a secure, passwordless authenti
 **Important:** The `REDIRECT_URI` must also be registered in your Google Cloud Console for the OAuth2 credentials.
 
 
+
 ## Key Interfaces In UI
 ### Home Page
 ![HomePage](app/static/images/HomePage-Gif.gif)
 
-### Login Page
+### Login Page (Updated image for Assingment 4)
 ![LoginPage](app/static/images/LoginPage.jpg)
 
 ### Registration Page
 ![RegisterPage](app/static/images/RegisterPage.jpg)
 
-### User Profile
+### User Profile (Updated image for Assignment 4)
 ![ProfilePage](app/static/images/UserProfilePage.jpg)
 
 ### Inventory Management Page
 ![ManageInventoryDashboard](app/static/images/ManageInventoryDashboard.jpg)
 
-### Edit Inventory (Inside Inventory Management Page)
+### Edit Inventory (Inside Inventory Management Page) 
 ![EditInventory](app/static/images/EditInventory.jpg)
 
 ### View Inventory Page
@@ -380,7 +381,15 @@ Google SSO enhances user experience and provides a secure, passwordless authenti
 ### Inventory Dashboard (Updated For Assignment 4)
 ![Dashboard](app/static/images/Dashboard.jpg)
 
+### Dark Mode Images (Three Sample images)
 
+### User Profile  (Updated image for Assignment 4)
+![ProfilePage](app/static/images/ProfileDarkMode.jpg)
 
+### Inventory Dashboard (Updated For Assignment 4)
+![Dashboard](app/static/images/dashboardDarkMode.jpg)
+
+### Inventory Management Page
+![ManageInventoryDashboard](app/static/images/ManageInventoryPageDarkMode.jpg)
 
 
