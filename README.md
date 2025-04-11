@@ -85,10 +85,12 @@ The Inventory Management System is designed to streamline inventory control for 
 
 #### ✅ User Interface
 - Clean and responsive web interface using Jinja2 + Tailwind CSS
-- Inventory management pages (Admin and User views) [Not fully implemeted]
+- Inventory management pages (Admin and User views) 
 - Dedicated pages for managing and viewing inventory
+- Dark mode theme for enhanced user experience (assignment 4 update)
+- Intutitive dynamic dashboard 
 
-#### ✅ Dashboard with Visual Insights
+#### ✅ Dashboard with Visual Insights (Assignment 4 update)
 - 📊 Inventory dashboard displaying:
   - Total inventory value
   - Unique and top suppliers
