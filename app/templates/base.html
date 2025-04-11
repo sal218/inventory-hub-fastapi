@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8">
     <title>{% block title %}Inventory Management System{% endblock %}</title>
-    
+    <script>
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
     <!-- load the Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- configure Tailwind dark mode -->
